@@ -2,3 +2,5 @@
 [00:00:01.456] Server  LOG     ✓ Ready in 1082ms
 [00:00:12.214] Server  ERROR   Middleware: Missing Supabase Env Vars
 [00:00:12.930] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:48.022] Server  ERROR   Middleware: Missing Supabase Env Vars
+[00:02:48.323] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
