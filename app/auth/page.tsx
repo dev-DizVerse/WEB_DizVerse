@@ -107,7 +107,7 @@ export default function AuthPage() {
 
     try {
       if (loginType === "staff") {
-        
+
 
         console.log("Attempting staff login for:", email);
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
@@ -122,8 +122,13 @@ export default function AuthPage() {
         const department = data.session?.user?.user_metadata?.department;
 
         if (role === "admin") {
+          localStorage.setItem('currentUser', data.session?.user?.email || '');
+          localStorage.setItem('userRole', 'admin');
           window.location.href = "/admin";
         } else if (role === "staff") {
+          localStorage.setItem('currentUser', data.session?.user?.email || '');
+          localStorage.setItem('userRole', 'staff');
+          localStorage.setItem('userDepartment', department || '');
           if (department === "operations") {
             window.location.href = "/dashboard/operations";
           } else {
@@ -148,7 +153,7 @@ export default function AuthPage() {
           });
 
           if (signUpError) throw signUpError;
-          
+
           setSuccess("Account created successfully! Please login to continue.");
           setIsSignUp(false);
           setPassword("");
@@ -161,17 +166,19 @@ export default function AuthPage() {
             password,
           });
           console.log("User login response:", { data: data?.user?.id, error: signInError });
-          
+
           if (signInError) throw signInError;
-          
+
           const role = data.session?.user?.user_metadata?.role;
-          
+
           if (role !== "user" && role !== "admin") {
             // allow admin to login as user too just in case, but mainly check for "user"
             await supabase.auth.signOut();
             throw new Error("Invalid user credentials");
           }
 
+          localStorage.setItem('currentUser', data.session?.user?.email || '');
+          localStorage.setItem('userRole', 'user');
           window.location.href = "/dashboard/user";
         }
       }
@@ -201,22 +208,22 @@ export default function AuthPage() {
                   <span className="text-4xl font-black text-[#00f0ff] ml-3">DizVerse</span>
                 </div>
                 <div className="flex justify-center">
-                  <Image 
-                    src="/desk.png" 
-                    alt="Login Illustration" 
+                  <Image
+                    src="/desk.png"
+                    alt="Login Illustration"
                     width={400}
                     height={400}
                     className="object-contain"
                   />
                 </div>
               </div>
-              
+
               {/* Right Side - Login Card (UNCHANGED) */}
               <div className="flex-1 max-w-md overflow-hidden">
                 <div className="relative">
                   {/* Gradient Border/Glow */}
                   <div className="absolute inset-0 bg-gradient-to-r from-[#7b2fff] via-[#00f0ff] to-[#00ff88] rounded-2xl opacity-20 blur-sm"></div>
-                  
+
                   {/* Card Content */}
                   <div className="relative bg-[#0d1117] border border-[rgba(0,240,255,0.2)] rounded-2xl p-8 shadow-2xl">
                     <div className="text-center">
@@ -277,22 +284,22 @@ export default function AuthPage() {
                 <span className="text-4xl font-black text-[#00f0ff] ml-3">DizVerse</span>
               </div>
               <div className="flex justify-center">
-                <Image 
-                  src="/desk.png" 
-                  alt="Login Illustration" 
+                <Image
+                  src="/desk.png"
+                  alt="Login Illustration"
                   width={400}
                   height={400}
                   className="object-contain"
                 />
               </div>
             </div>
-            
+
             {/* Right Side - Login Card (UNCHANGED) */}
             <div className="flex-1 max-w-md overflow-hidden">
               <div className="relative">
                 {/* Gradient Border/Glow */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#7b2fff] via-[#00f0ff] to-[#00ff88] rounded-2xl opacity-20 blur-sm"></div>
-                
+
                 {/* Card Content */}
                 <div className="relative bg-[#0d1117] border border-[rgba(0,240,255,0.2)] rounded-2xl p-8 shadow-2xl">
                   <div className="text-center">
@@ -300,8 +307,8 @@ export default function AuthPage() {
                       {loginType === "staff" ? "Staff Login" : (isSignUp ? "Create Account" : "User Login")}
                     </h3>
                     <p className="text-[#8b949e] text-lg mb-8">
-                      {loginType === "staff" 
-                        ? "Enter your staff credentials" 
+                      {loginType === "staff"
+                        ? "Enter your staff credentials"
                         : (isSignUp ? "Join our platform" : "Welcome back to your dashboard")
                       }
                     </p>
@@ -398,7 +405,7 @@ export default function AuthPage() {
                           Already have an account? Sign in
                         </button>
                       )}
-                      
+
                       <button
                         type="button"
                         onClick={() => {
@@ -409,7 +416,7 @@ export default function AuthPage() {
                       >
                         ← Back to Login Selection
                       </button>
-                      
+
                       <button
                         onClick={() => router.push("/")}
                         className="text-[#8b949e] hover:text-white text-sm block transition-colors"
