@@ -107,13 +107,7 @@ export default function AuthPage() {
 
     try {
       if (loginType === "staff") {
-        // Temporary hardcode fallback for admin if not in Supabase yet
-        if (email === "ra1yan@dizverse.online" && password === "raiyan@06") {
-          // You ideally want to sign this user up in Supabase and assign role: 'admin'
-          // but if they aren't there yet, this bypasses Supabase temporarily for demo.
-          // Note: using bypass won't set Supabase cookies, so dashboard will fail if it expects cookies.
-          // It's recommended to create this user in Supabase auth right away.
-        }
+        
 
         console.log("Attempting staff login for:", email);
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
@@ -127,7 +121,7 @@ export default function AuthPage() {
         const role = data.session?.user?.user_metadata?.role;
         const department = data.session?.user?.user_metadata?.department;
 
-        if (role === "admin" || email === "ra1yan@dizverse.online") {
+        if (role === "admin") {
           window.location.href = "/admin";
         } else if (role === "staff") {
           if (department === "operations") {
