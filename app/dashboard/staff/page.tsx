@@ -36,36 +36,15 @@ const now = new Date();
 const y = now.getFullYear();
 const m = now.getMonth();
 
-const myLeaveApplications = [
-  { id: 4, type: "Annual Leave", from: daysFromNow(5), to: daysFromNow(9), days: 5, reason: "Personal travel", status: "Pending", applied: daysFromNow(-1) },
-  { id: 9, type: "Sick Leave", from: daysFromNow(-30), to: daysFromNow(-28), days: 2, reason: "Fever and rest", status: "Approved", applied: daysFromNow(-31) },
-  { id: 10, type: "Annual Leave", from: daysFromNow(-90), to: daysFromNow(-85), days: 5, reason: "Vacation", status: "Approved", applied: daysFromNow(-95) },
-];
+const myLeaveApplications: any[] = [];
 
-const mySchedules = [
-  { id: 1, name: "Creative Team Standup", dept: "creative", lead: "Wilbur Hackett", members: ["Angela Von", "Wilbur Hackett"], time: "09:00", date: makeDate(y, m, 3), color: "#10B981", isLead: true },
-  { id: 3, name: "Sales Pipeline Review", dept: "sales", lead: "Keith Hirthe", members: ["Keith Hirthe", "Lisa Harvey", "Wilbur Hackett"], time: "13:30", date: makeDate(y, m, 8), color: "#F59E0B", isLead: false },
-  { id: 6, name: "Weekly Wrap-up", dept: "operations", lead: "Sonia Hoppe", members: ["All Staff"], time: "17:30", date: makeDate(y, m, 20), color: "#EF4444", isLead: false },
-];
+const mySchedules: any[] = [];
 
-const myProjects = [
-  { id: 1, name: "Website Redesign", dept: "creative", lead: "Wilbur Hackett", status: "In Progress", priority: "High", deadline: "Aug 15, 2024", progress: 65, isLead: true },
-  { id: 2, name: "CRM Integration", dept: "development", lead: "Annette Dickinson", status: "In Progress", priority: "High", deadline: "Sep 1, 2024", progress: 40, isLead: false },
-];
+const myProjects: any[] = [];
 
-const payslips = [
-  { month: "June 2024", amount: 4500, status: "Paid", date: "Jun 30, 2024" },
-  { month: "May 2024", amount: 4500, status: "Paid", date: "May 31, 2024" },
-  { month: "Apr 2024", amount: 4500, status: "Paid", date: "Apr 30, 2024" },
-  { month: "Mar 2024", amount: 4200, status: "Paid", date: "Mar 31, 2024" },
-  { month: "Feb 2024", amount: 4200, status: "Paid", date: "Feb 29, 2024" },
-  { month: "Jan 2024", amount: 4200, status: "Paid", date: "Jan 31, 2024" },
-];
+const payslips: any[] = [];
 
-const teamMembers = [
-  { name: "Angela Von", role: "Creative Director", email: "angela93@gmail.com", status: "On Leave", isMe: false },
-  { name: "Wilbur Hackett", role: "UI Designer", email: "wilbur@yahoo.com", status: "Active", isMe: true },
-];
+const teamMembers: any[] = [];
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -743,7 +722,7 @@ export default function StaffDashboard() {
   }
 
   return (
-    <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }} className="flex h-screen bg-gray-50 overflow-hidden relative z-[9005] w-full text-gray-800">
+    <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif", position: 'fixed', inset: 0, zIndex: 99999 }} className="flex bg-gray-50 overflow-hidden w-full text-gray-800">
       {showLeaveModal && <LeaveModal onClose={() => setShowLeaveModal(false)} onSubmit={handleLeaveSubmit} />}
 
       {/* Sidebar */}
@@ -767,7 +746,7 @@ export default function StaffDashboard() {
         </div>
 
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2 px-1">Menu</p>
-        <nav className="flex flex-col gap-1">
+        <nav className="flex flex-col gap-1" style={{ position: 'static', padding: 0, background: 'none', border: 'none', zIndex: 'auto' }}>
           {navItems.map(item => (
             <button key={item.id} onClick={() => setActivePage(item.id)}
               className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all ${activePage === item.id ? "bg-indigo-50 text-indigo-600" : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"}`}>
