@@ -692,6 +692,18 @@ export default function StaffDashboard() {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
+  const [, setForceRender] = useState(false);
+
+  useEffect(() => {
+    const email = localStorage.getItem("currentUser");
+    const role = localStorage.getItem("userRole");
+    if (email) {
+      currentStaff.name = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
+      currentStaff.email = email;
+      if (role) currentStaff.role = role.charAt(0).toUpperCase() + role.slice(1);
+      setForceRender(true);
+    }
+  }, []);
 
   function handleLeaveSubmit(leave: any) {
     setLeaves((prev: any[]) => [{ ...leave, id: Date.now() }, ...prev]);
@@ -731,7 +743,7 @@ export default function StaffDashboard() {
   }
 
   return (
-    <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }} className="flex h-screen bg-gray-50 overflow-hidden">
+    <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }} className="flex h-screen bg-gray-50 overflow-hidden relative z-[9005] w-full text-gray-800">
       {showLeaveModal && <LeaveModal onClose={() => setShowLeaveModal(false)} onSubmit={handleLeaveSubmit} />}
 
       {/* Sidebar */}
