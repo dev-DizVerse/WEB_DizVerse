@@ -180,8 +180,9 @@ export default function DashboardLayout({
     <>
       <div className="cursor" id="cursor" ref={cursorRef} />
       <div className="cursor-ring" id="cursorRing" ref={ringRef} />
-      <div className="min-h-screen bg-[#020408]">
+      <div className={`min-h-screen ${(pathname?.includes('/staff') || pathname?.includes('/operations')) ? 'bg-gray-50' : 'bg-[#020408]'}`}>
         {/* Dashboard Navigation */}
+        {!(pathname?.includes('/staff') || pathname?.includes('/operations')) && (
         <nav className="pt-48">
           <div className="flex items-center justify-between h-12 w-full px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-6">
@@ -273,6 +274,7 @@ export default function DashboardLayout({
             </div>
           </div>
         </nav>
+        )}
 
         {/* Main Content - Direct */}
         <main className="w-full">

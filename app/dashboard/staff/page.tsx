@@ -731,7 +731,7 @@ export default function StaffDashboard() {
   }
 
   return (
-    <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }} className="flex h-[calc(100vh-6rem)] bg-gray-50 overflow-hidden rounded-xl border border-gray-200/20 shadow-xl m-4">
+    <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }} className="flex h-screen bg-gray-50 overflow-hidden">
       {showLeaveModal && <LeaveModal onClose={() => setShowLeaveModal(false)} onSubmit={handleLeaveSubmit} />}
 
       {/* Sidebar */}
