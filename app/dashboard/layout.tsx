@@ -176,13 +176,22 @@ export default function DashboardLayout({
     window.location.href = '/';
   };
 
+  const isLightPage = pathname?.includes('/staff') || pathname?.includes('/operations');
+
   return (
     <>
-      <div className="cursor" id="cursor" ref={cursorRef} />
-      <div className="cursor-ring" id="cursorRing" ref={ringRef} />
-      <div className={`min-h-screen ${(pathname?.includes('/staff') || pathname?.includes('/operations')) ? 'bg-gray-50' : 'bg-[#020408]'}`}>
+      {!isLightPage && (
+        <>
+          <div className="cursor" id="cursor" ref={cursorRef} />
+          <div className="cursor-ring" id="cursorRing" ref={ringRef} />
+        </>
+      )}
+      <div
+        className={isLightPage ? 'h-screen overflow-hidden flex flex-col bg-gray-50' : 'min-h-screen bg-[#020408]'}
+        style={isLightPage ? { cursor: 'auto' } : {}}
+      >
         {/* Dashboard Navigation */}
-        {!(pathname?.includes('/staff') || pathname?.includes('/operations')) && (
+        {!isLightPage && (
         <nav className="pt-48">
           <div className="flex items-center justify-between h-12 w-full px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-6">
@@ -277,7 +286,7 @@ export default function DashboardLayout({
         )}
 
         {/* Main Content - Direct */}
-        <main className="w-full">
+        <main className={isLightPage ? 'flex-1 flex flex-col overflow-hidden' : 'w-full'}>
           {children}
         </main>
       </div>
