@@ -15,7 +15,7 @@ const currentStaff = {
   location: "New York, USA",
 };
 
-const DEPT_COLORS = {
+const DEPT_COLORS: Record<string, string> = {
   operations: "#3B82F6",
   creative: "#10B981",
   sales: "#F59E0B",
@@ -23,13 +23,13 @@ const DEPT_COLORS = {
   marketing: "#8B5CF6",
 };
 
-function daysFromNow(n) {
+function daysFromNow(n: number) {
   const d = new Date();
   d.setDate(d.getDate() + n);
   return d.toISOString().split("T")[0];
 }
 
-function makeDate(year, month, day) {
+function makeDate(year: number, month: number, day: number) {
   return new Date(year, month, day).toISOString().split("T")[0];
 }
 const now = new Date();
@@ -63,7 +63,7 @@ const payslips = [
 ];
 
 const teamMembers = [
-  { name: "Angela Von", role: "Creative Director", email: "angela93@gmail.com", status: "On Leave" },
+  { name: "Angela Von", role: "Creative Director", email: "angela93@gmail.com", status: "On Leave", isMe: false },
   { name: "Wilbur Hackett", role: "UI Designer", email: "wilbur@yahoo.com", status: "Active", isMe: true },
 ];
 
@@ -71,8 +71,8 @@ const MONTHS = ["January", "February", "March", "April", "May", "June", "July", 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 // ===================== HELPERS =====================
-function getInitials(name) { return name.split(" ").map(n => n[0]).join("").toUpperCase(); }
-function getAvatarColor(name) {
+function getInitials(name: string) { return name.split(" ").map(n => n[0]).join("").toUpperCase(); }
+function getAvatarColor(name: string) {
   const colors = ["#6366F1", "#EC4899", "#F59E0B", "#10B981", "#3B82F6", "#8B5CF6", "#EF4444", "#06B6D4"];
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -80,13 +80,13 @@ function getAvatarColor(name) {
 }
 
 // ===================== LEAVE APPLY MODAL =====================
-function LeaveModal({ onClose, onSubmit }) {
+function LeaveModal({ onClose, onSubmit }: any) {
   const [form, setForm] = useState({ type: "Annual Leave", from: "", to: "", reason: "" });
   const [error, setError] = useState("");
 
   function calcDays() {
     if (!form.from || !form.to) return 0;
-    const diff = (new Date(form.to) - new Date(form.from)) / (1000 * 60 * 60 * 24) + 1;
+    const diff = (new Date(form.to).getTime() - new Date(form.from).getTime()) / (1000 * 60 * 60 * 24) + 1;
     return diff > 0 ? diff : 0;
   }
 
@@ -148,16 +148,16 @@ function LeaveModal({ onClose, onSubmit }) {
 // ===================== PAGES =====================
 
 // ---- HOME ----
-function HomePage({ leaves }) {
+function HomePage({ leaves }: any) {
   const today = new Date();
   const upcomingSchedules = mySchedules
     .filter(s => new Date(s.date) >= today)
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3);
 
-  const pendingLeave = leaves.find(l => l.status === "Pending");
-  const approvedLeaves = leaves.filter(l => l.status === "Approved").length;
-  const totalDaysUsed = leaves.filter(l => l.status === "Approved").reduce((s, l) => s + l.days, 0);
+  const pendingLeave = leaves.find((l: any) => l.status === "Pending");
+  const approvedLeaves = leaves.filter((l: any) => l.status === "Approved").length;
+  const totalDaysUsed = leaves.filter((l: any) => l.status === "Approved").reduce((s: number, l: any) => s + l.days, 0);
   const leaveBalance = 20 - totalDaysUsed;
 
   const greetingHour = today.getHours();
@@ -246,20 +246,20 @@ function HomePage({ leaves }) {
 }
 
 // ---- LEAVE PAGE ----
-function LeavePage({ leaves, onApply }) {
-  const approvedDays = leaves.filter(l => l.status === "Approved").reduce((s, l) => s + l.days, 0);
+function LeavePage({ leaves, onApply }: any) {
+  const approvedDays = leaves.filter((l: any) => l.status === "Approved").reduce((s: number, l: any) => s + l.days, 0);
   const leaveBalance = 20 - approvedDays;
-  const pendingCount = leaves.filter(l => l.status === "Pending").length;
+  const pendingCount = leaves.filter((l: any) => l.status === "Pending").length;
 
-  const statusStyle = {
+  const statusStyle: Record<string, string> = {
     Approved: "bg-green-50 text-green-600",
     Declined: "bg-red-50 text-red-500",
     Pending: "bg-purple-50 text-purple-600",
   };
   const leaveTypes = [
     { type: "Annual Leave", total: 20, used: approvedDays, color: "#6366F1" },
-    { type: "Sick Leave", total: 10, used: leaves.filter(l => l.type === "Sick Leave" && l.status === "Approved").reduce((s, l) => s + l.days, 0), color: "#F59E0B" },
-    { type: "Emergency Leave", total: 5, used: leaves.filter(l => l.type === "Emergency Leave" && l.status === "Approved").reduce((s, l) => s + l.days, 0), color: "#EF4444" },
+    { type: "Sick Leave", total: 10, used: leaves.filter((l: any) => l.type === "Sick Leave" && l.status === "Approved").reduce((s: number, l: any) => s + l.days, 0), color: "#F59E0B" },
+    { type: "Emergency Leave", total: 5, used: leaves.filter((l: any) => l.type === "Emergency Leave" && l.status === "Approved").reduce((s: number, l: any) => s + l.days, 0), color: "#EF4444" },
   ];
 
   return (
@@ -301,7 +301,7 @@ function LeavePage({ leaves, onApply }) {
         <table className="w-full">
           <thead><tr className="border-b border-gray-100">{["Type", "Period", "Days", "Applied On", "Status"].map(h => <th key={h} className="text-left text-xs font-semibold text-gray-400 px-5 py-4 uppercase tracking-wider">{h}</th>)}</tr></thead>
           <tbody>
-            {leaves.map((l, i) => (
+            {leaves.map((l: any, i: number) => (
               <tr key={l.id} className={`hover:bg-gray-50 transition ${i !== leaves.length - 1 ? "border-b border-gray-50" : ""}`}>
                 <td className="px-5 py-4 text-sm font-medium text-gray-700">{l.type}</td>
                 <td className="px-5 py-4 text-sm text-gray-500">{l.from} → {l.to}</td>
@@ -336,18 +336,18 @@ function SchedulePage() {
 
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const cells = [];
+  const cells: (number | null)[] = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
-  function dateStr(day) {
+  function dateStr(day: number) {
     return `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   }
 
-  const schedulesOnDay = (day) => mySchedules.filter(s => s.date === dateStr(day));
+  const schedulesOnDay = (day: number) => mySchedules.filter(s => s.date === dateStr(day));
   const selectedSchedules = mySchedules.filter(s => s.date === selectedDate).sort((a, b) => a.time.localeCompare(b.time));
-  const isToday = (day) => dateStr(day) === today.toISOString().split("T")[0];
-  const isSelected = (day) => dateStr(day) === selectedDate;
+  const isToday = (day: number) => dateStr(day) === today.toISOString().split("T")[0];
+  const isSelected = (day: number) => dateStr(day) === selectedDate;
 
   return (
     <div>
@@ -430,12 +430,12 @@ function SchedulePage() {
 
 // ---- PROJECTS PAGE ----
 function ProjectsPage() {
-  const statusStyle = {
+  const statusStyle: Record<string, string> = {
     "In Progress": "bg-blue-50 text-blue-600",
     "Planning": "bg-yellow-50 text-yellow-600",
     "Completed": "bg-green-50 text-green-600",
   };
-  const priorityStyle = {
+  const priorityStyle: Record<string, string> = {
     "High": "bg-red-50 text-red-500",
     "Medium": "bg-yellow-50 text-yellow-600",
     "Low": "bg-green-50 text-green-600",
@@ -500,7 +500,7 @@ function ProjectsPage() {
 
 // ---- PAYSLIP PAGE ----
 function PayslipPage() {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<any>(null);
 
   return (
     <div>
@@ -588,7 +588,7 @@ function PayslipPage() {
 // ---- PROFILE PAGE ----
 function ProfilePage() {
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Record<string, string>>({
     name: currentStaff.name,
     email: currentStaff.email,
     phone: currentStaff.phone,
@@ -688,19 +688,20 @@ function ProfilePage() {
 // ===================== MAIN APP =====================
 export default function StaffDashboard() {
   const [activePage, setActivePage] = useState("home");
-  const [leaves, setLeaves] = useState(myLeaveApplications);
+  const [leaves, setLeaves] = useState<any[]>(myLeaveApplications);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
 
-  function handleLeaveSubmit(leave) {
-    setLeaves(prev => [{ ...leave, id: Date.now() }, ...prev]);
+  function handleLeaveSubmit(leave: any) {
+    setLeaves((prev: any[]) => [{ ...leave, id: Date.now() }, ...prev]);
   }
 
   useEffect(() => {
-    function handleClick(e) {
-      if (!e.target.closest("#notif-panel") && !e.target.closest("#notif-btn")) setShowNotif(false);
-      if (!e.target.closest("#profile-panel") && !e.target.closest("#profile-btn")) setShowProfile(false);
+    function handleClick(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      if (!target.closest("#notif-panel") && !target.closest("#notif-btn")) setShowNotif(false);
+      if (!target.closest("#profile-panel") && !target.closest("#profile-btn")) setShowProfile(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
